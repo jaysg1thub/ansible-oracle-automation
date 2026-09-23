@@ -6,7 +6,7 @@
   tasks:
     - name: Query Open Mode Status of Target PDB via SQL*Plus
       ansible.builtin.shell: |
-	export ORACLE_HOME=/u001/app/oracle/product/19.3/dbhome_1
+        export ORACLE_HOME=/u001/app/oracle/product/19.3/dbhome_1
         export ORACLE_SID=ORDS
         export PATH=$ORACLE_HOME/bin:$PATH
         sqlplus -s / as sysdba <<EOF
