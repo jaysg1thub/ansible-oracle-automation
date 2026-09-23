@@ -1,0 +1,22 @@
+---
+- name: Verify Pluggable Database Connectivity and Status
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Query Open Mode Status of Target PDB via SQL*Plus
+      ansible.builtin.shell: |
+        export ORACLE_HOME=/u01/app/oracle/product/19.3.0/dbhome_1
+        export ORACLE_SID=ORDS
+        export PATH=$ORACLE_HOME/bin:$PATH
+        sqlplus -s / as sysdba <<EOF
+        ALTER SESSION SET CONTAINER = ORDSPDB1;
+        SELECT name, open_mode FROM v\$pdbs;
+        EXIT;
+        EOF
+      register: sqlplus_output
+      changed_when: false
+
+    - name: Display PDB Operational Status
+      ansible.builtin.debug:
+        msg: "{{ sqlplus_output.stdout_lines }}"
