@@ -1,0 +1,22 @@
+---
+- name: Jarboe Digital LLC - Revenue Application Lifecycle Management
+  hosts: all
+  gather_facts: false
+  become: yes  # Runs with sudo privileges to manage system services safely
+
+  vars_prompt:
+    - name: app_action
+      prompt: "Select the desired operation for the revenue app"
+      default: "started"
+      private: false
+
+  tasks:
+    - name: Enforce application operational state
+      ansible.builtin.systemd:
+        name: flask-revenue-app  # The target background systemd engine service name
+        state: "{{ app_action }}"
+      register: service_result
+
+    - name: Report Deployment Status Dashboard
+      ansible.builtin.debug:
+        msg: "Application service change completed successfully! Current active state: {{ service_result.state }}"
